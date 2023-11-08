@@ -3,6 +3,7 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as React from "react"
 import { cn } from "../../@/lib/utils"
+import { useAuth } from "../hooks/useAuth"
 import {
     Form,
     FormControl,
@@ -31,7 +32,9 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
     
   })
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    const {Login} = useAuth();
+    Login.mutate(values)
+    //console.log(values)
    
   }
 

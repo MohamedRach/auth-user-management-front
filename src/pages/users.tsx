@@ -1,19 +1,11 @@
 import { MainNav } from "../components/main-nav"
-import { User, columns } from "../components/usersTable/columns"
+import { columns } from "../components/usersTable/columns"
 import { DataTable } from "../components/usersTable/dataTable"
+import {useUser} from "../hooks/useUser"
 export default function Users() {
-    const data: User[] = [
-        {
-            id: 1,
-            username: "hamido",
-            email: "hamido@gmail.com"
-        },
-        {
-            id: 2,
-            username: "youssefo",
-            email: "youssefo@outlook.com"
-        }
-    ]
+    const {getUsers} = useUser()
+    const { error, data} = getUsers;
+    console.log(error)
     return (
         <>
           <div className="hidden flex-col md:flex">
@@ -29,7 +21,7 @@ export default function Users() {
                     
                 </div>
                 <div className="container mx-auto mt-O py-10">
-                    <DataTable columns={columns} data={data}/>
+                    {data && <DataTable columns={columns} data={data}/>}
                 </div>
             </div>
         </div> 

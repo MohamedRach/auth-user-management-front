@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm} from "react-hook-form"
 import * as React from "react"
 import { cn } from "../../@/lib/utils"
-//import { Icons } from "@/components/icons"
+import { useAuth } from "../hooks/useAuth"
 import { Button } from "../../@/components/ui/button"
 import { Input } from "../../@/components/ui/input"
 import { Label } from "../../@/components/ui/label"
@@ -27,14 +27,16 @@ const formSchema = z.object({
   })
 export function SignupForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
-
+  const {Signup} = useAuth();
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     
   })
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    
     setIsLoading(true)
+    Signup.mutate(values)
     console.log(values)
    
   }
