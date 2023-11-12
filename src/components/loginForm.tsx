@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as React from "react"
 import { cn } from "../../@/lib/utils"
 import { useAuth } from "../hooks/useAuth"
+import { useNavigate } from "react-router"
 import {
     Form,
     FormControl,
@@ -17,7 +18,6 @@ import { Button } from "../../@/components/ui/button"
 import { Input } from "../../@/components/ui/input"
 import { useForm} from "react-hook-form"
 
-
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 const formSchema = z.object({
     email: z.string().email("Invalid Email"),
@@ -26,18 +26,21 @@ const formSchema = z.object({
     }),
   })
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
+  const navigate = useNavigate()
+  const {Login} = useAuth();
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     
   })
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const {Login} = useAuth();
+    setIsLoading(true)
     Login.mutate(values)
     //console.log(values)
+    setIsLoading(false)
+    navigate("/dashboard")
    
   }
-
   return (
     <div className={cn("grid gap-6", className)} {...props}>
       <Form {...form}>
@@ -71,12 +74,13 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
           )}
         />
         
-      
+          
         <Button  type="submit" className="w-[400px]">
           LogIn
         </Button>
       </form>
     </Form>
+    {isLoading && <p>This may take a while please wait....</p>}
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />

@@ -1,40 +1,45 @@
-import { MainNav } from "../components/main-nav"
-import DashboardCards from "../components/dashboardCards"
-import { Overview } from "../components/overview"
+
+import { useState } from "react";
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle,
   } from "../../@/components/ui/card"
+import { useAuth } from "../hooks/useAuth"
+import { useNavigate } from "react-router-dom";
+import { Button } from "../../@/components/ui/button";
+
 export default function Dashboard() {
+    
+    const navigate = useNavigate()
+    const [showPassword, setShowPassword] =  useState(false)
+    const {getApiKey} = useAuth();
+    const showPasswordFunction = () => {
+      if (showPassword) {
+        setShowPassword(false)
+      } else {
+        setShowPassword(true)
+      }
+    }
+
+    const logOut = () => {
+     
+      navigate("/login")
+    }
+    console.log(getApiKey.data)
     return (
       <>
         
         <div className="hidden flex-col md:flex">
-            <div className="border-b">
-                <div className="flex h-16 items-center px-4">
-                <img  src="vite.svg"/>
-                <MainNav className="mx-6" />
-                
-                </div>
-            </div>
-            <div className="flex-1 space-y-4 p-8 pt-6">
-                <div className="flex items-center justify-between space-y-2">
-                    <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-                    
-                </div>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <DashboardCards />
-                </div>
-            </div>
             <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-1">
                 <Card className="col-span-4">
                   <CardHeader>
-                    <CardTitle>Overview</CardTitle>
+                    <CardTitle>This is your Api Key: {(getApiKey.data == undefined )? "your not authorized try to login" : (showPassword && getApiKey.data.length != 0 ) ? getApiKey.data[0].apiKey : "*********************"}</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    <Overview />
+                    <Button className = "text-white" onClick={() => showPasswordFunction()}>Show Api Key </Button>
+                    <Button className = "text-white" onClick={() => logOut()}>Log out </Button>
                   </CardContent>
                 </Card>
             </div>

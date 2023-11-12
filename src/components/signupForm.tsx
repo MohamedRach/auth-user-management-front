@@ -7,7 +7,7 @@ import { cn } from "../../@/lib/utils"
 import { useAuth } from "../hooks/useAuth"
 import { Button } from "../../@/components/ui/button"
 import { Input } from "../../@/components/ui/input"
-import { Label } from "../../@/components/ui/label"
+import { useNavigate } from "react-router"
 import {
     Form,
     FormControl,
@@ -18,8 +18,8 @@ import {
   } from "../../@/components/ui/form"
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 const formSchema = z.object({
-    first_name: z.string(),
-    last_name: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
     email: z.string().email("Invalid Email"),
     password: z.string().min(8, {
       message: "password must be at least 8 characters"
@@ -28,7 +28,7 @@ const formSchema = z.object({
 export function SignupForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const {Signup} = useAuth();
-  
+  const navigate = useNavigate()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     
@@ -38,15 +38,18 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(true)
     Signup.mutate(values)
     console.log(values)
+    setIsLoading(false)
+    navigate("/dashboard")
    
   }
+ 
   return (
     <div className={cn("grid gap-6", className)} {...props}>
       <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
       <FormField
           control={form.control}
-          name="first_name"
+          name="firstName"
           render={({ field }) => (
             <FormItem className="w-[400px]">
               <FormLabel>First Name</FormLabel>
@@ -60,7 +63,7 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
         />
       <FormField
           control={form.control}
-          name="last_name"
+          name="lastName"
           render={({ field }) => (
             <FormItem className="w-[400px]">
               <FormLabel>Last Name</FormLabel>
@@ -102,11 +105,12 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
         />
         
       
-        <Button  type="submit" className="w-[400px]">
-          LogIn
+        <Button  type="submit" className="w-[400px] text-white">
+          SignUp
         </Button>
       </form>
     </Form>
+    {isLoading && <p>This may take a while please wait....</p>}
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
