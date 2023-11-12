@@ -27,7 +27,7 @@ export default function Dashboard() {
      
       navigate("/login")
     }
-    console.log(getApiKey.data)
+
     return (
       <>
         

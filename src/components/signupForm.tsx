@@ -37,7 +37,7 @@ export function SignupForm({ className, ...props }: UserAuthFormProps) {
     
     setIsLoading(true)
     Signup.mutate(values)
-    console.log(values)
+ 
     setIsLoading(false)
     navigate("/dashboard")
    
